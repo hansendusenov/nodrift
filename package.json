@@ -4,7 +4,7 @@
   "description": "Stop context loss and architectural drift across AI coding agents.",
   "type": "module",
   "bin": {
-    "nodrift-ai": "./cli/index.mjs"
+    "nodrift-ai": "cli/index.mjs"
   },
   "files": [
     "cli/",
