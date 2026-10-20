@@ -1,0 +1,15 @@
+{
+  "name": "nodrift",
+  "description": "Stop context loss and architectural drift across AI coding agents.",
+  "owner": {
+    "name": "Hansen Dusenov"
+  },
+  "plugins": [
+    {
+      "name": "nodrift",
+      "source": "./",
+      "version": "1.0.0",
+      "description": "Stop context loss and architectural drift across AI coding agents."
+    }
+  ]
+}

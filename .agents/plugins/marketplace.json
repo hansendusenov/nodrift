@@ -1,0 +1,21 @@
+{
+  "name": "nodrift",
+  "interface": {
+    "displayName": "nodrift"
+  },
+  "plugins": [
+    {
+      "name": "nodrift",
+      "version": "1.0.0",
+      "description": "Stop context loss and architectural drift across AI coding agents.",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "name": "nodrift-ai",
+  "version": "1.0.0",
+  "description": "Stop context loss and architectural drift across AI coding agents.",
+  "type": "module",
+  "bin": {
+    "nodrift-ai": "./cli/index.mjs"
+  },
+  "files": [
+    "cli/",
+    "skills/",
+    "rules/",
+    ".agents/",
+    ".claude-plugin/",
+    ".codex-plugin/",
+    ".cursor-plugin/",
+    ".cline-plugin/",
+    "plugin.json",
+    "nodrift.md",
+    "README.md",
+    "GUIDE.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "ai-agents",
+    "agent-skills",
+    "claude-code",
+    "codex",
+    "cursor",
+    "cline",
+    "antigravity",
+    "gemini-cli",
+    "openclaw",
+    "opencode",
+    "hermes",
+    "context-handoff",
+    "vibecoding"
+  ],
+  "license": "MIT",
+  "author": "Hansen Dusenov",
+  "homepage": "https://github.com/hansendusenov/nodrift#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hansendusenov/nodrift.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hansendusenov/nodrift/issues"
+  }
+}

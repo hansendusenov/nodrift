@@ -1,0 +1,18 @@
+# Dependencies and build output
+node_modules/
+*.tgz
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+*.log
+
+# Editor and OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
