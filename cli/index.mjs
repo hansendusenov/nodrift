@@ -16,6 +16,8 @@ export const SKILLS = [
   { name: 'nodrift-sync', recommended: true, hint: 'cross-agent handoff, crash recovery, collision prevention' },
   { name: 'nodrift-consultant', recommended: false, hint: 'pre-coding architecture and BLUEPRINT.md' },
   { name: 'nodrift-standard', recommended: false, hint: 'tech lead standards: .env, layers, scripts/, self-review' },
+  { name: 'nodrift-ui', recommended: false, hint: 'frontend UI guardrails: anti-slop, UX states, a11y, responsive' },
+  { name: 'nodrift-troubleshooting', recommended: false, hint: 'autonomous root-cause debugging, tests, error analysis' },
 ]
 
 // `project` is relative to the workspace, `global` relative to the home directory.
@@ -42,6 +44,8 @@ const POINTER_LINES = [
   '- Always follow `nodrift-sync` for cross-agent `.agent-context/` handoff and collision prevention.',
   '- Follow `nodrift-consultant` when scoping new projects or architectures.',
   '- Follow `nodrift-standard` for `.env` hygiene, architectural boundaries, `scripts/` execution, and self-code review.',
+  '- Follow `nodrift-ui` for frontend and UI work: anti-slop guardrails, UX states, accessibility, and responsive design.',
+  '- Follow `nodrift-troubleshooting` when investigating errors, test failures, unexpected behavior, or regressions.',
   END,
 ]
 
@@ -353,7 +357,8 @@ Options
                        project and your home directory, and the AGENTS.md pointer
   -y, --yes            Skip the prompts and use flags or defaults
       --skills <list>  Comma-separated: nodrift-sync, nodrift-consultant,
-                       nodrift-standard, or "all"   (default with --yes: nodrift-sync)
+                       nodrift-standard, nodrift-ui, nodrift-troubleshooting,
+                       or "all"                     (default with --yes: nodrift-sync)
       --scope <scope>  project | global             (default with --yes: project)
       --agents <list>  Comma-separated agent ids    (default with --yes: detected, else generic)
   -v, --version        Print the version

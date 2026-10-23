@@ -1,6 +1,6 @@
 {
   "name": "nodrift",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Stop context loss and architectural drift across AI coding agents.",
   "author": {
     "name": "Hansen Dusenov"
@@ -8,12 +8,12 @@
   "homepage": "https://github.com/hansendusenov/nodrift",
   "repository": "https://github.com/hansendusenov/nodrift",
   "license": "MIT",
-  "keywords": ["agent-skills", "context-handoff", "architecture", "vibecoding", "multi-agent"],
+  "keywords": ["agent-skills", "context-handoff", "architecture", "vibecoding", "multi-agent", "ui", "debugging"],
   "skills": "./skills/",
   "interface": {
     "displayName": "nodrift",
     "shortDescription": "Stop context loss and architectural drift across AI coding agents.",
-    "longDescription": "Three skills: nodrift-sync for cross-agent handoff and collision prevention, nodrift-consultant for pre-coding architecture and BLUEPRINT.md, nodrift-standard for tech lead coding standards.",
+    "longDescription": "Five skills: nodrift-sync for cross-agent handoff and collision prevention, nodrift-consultant for pre-coding architecture and BLUEPRINT.md, nodrift-standard for tech lead coding standards, nodrift-ui for frontend anti-slop and UX guardrails, nodrift-troubleshooting for root-cause analysis and debugging.",
     "developerName": "Hansen Dusenov",
     "category": "Productivity"
   }

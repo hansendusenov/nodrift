@@ -33,6 +33,8 @@ At session start, load the installed `nodrift` skills from `.agents/skills/` (or
 - Always follow `nodrift-sync` for cross-agent `.agent-context/` handoff and collision prevention.
 - Follow `nodrift-consultant` when scoping new projects or architectures.
 - Follow `nodrift-standard` for `.env` hygiene, architectural boundaries, `scripts/` execution, and self-code review.
+- Follow `nodrift-ui` for frontend and UI work: anti-slop guardrails, UX states, accessibility, and responsive design.
+- Follow `nodrift-troubleshooting` when investigating errors, test failures, unexpected behavior, or regressions.
 <!-- nodrift:end -->
 ```
 

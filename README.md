@@ -2,13 +2,17 @@
 
 Stop context loss and architectural drift across AI coding agents.
 
-`nodrift` is a suite of three agent skills. It works in Antigravity, Codex, Claude Code, OpenClaw, OpenCode, Hermes, Cursor, Cline, and Gemini CLI.
+`nodrift` is a suite of five agent skills. It works in Antigravity, Codex, Claude Code, OpenClaw, OpenCode, Hermes, Cursor, Cline, and Gemini CLI.
 
 ## What it solves
 
 **Multi-agent handoff.** You hit a quota in one agent and continue in another. The second agent has no idea what the first one decided, finished, or broke. Two agents edit the same file at once. A crash loses the session. `nodrift-sync` keeps a shared `.agent-context/` folder that any agent can read and resume from.
 
 **Architectural drift.** Vibecoding without guardrails moves business logic into views, leaks secrets into commits, and leaves docs describing code that no longer exists. `nodrift-consultant` settles the architecture before code is written. `nodrift-standard` holds every later change to it.
+
+**UI slop and incomplete UX.** Agents reach for generic gradients, filler copy, and fake metrics while omitting loading, empty, and responsive states. `nodrift-ui` enforces anti-slop guardrails, UX completeness, accessibility, and responsive behavior.
+
+**Blind-retry debugging and symptom suppression.** Agents guess at fixes, comment out tests, silence types with `any`, or repeat hypotheses that already failed. `nodrift-troubleshooting` enforces evidence gathering before edits, clean reproduction, root-cause isolation, verification, and a hard stop rule against blind retries.
 
 ## The skills
 
@@ -17,8 +21,10 @@ Stop context loss and architectural drift across AI coding agents.
 | `nodrift-sync` | Core, always on | `.agent-context/` state sync across agents, crash and quota recovery, concurrent file-collision prevention |
 | `nodrift-consultant` | Before coding | Requirements analysis, tech stack selection, a `BLUEPRINT.md` |
 | `nodrift-standard` | While coding | `.env` hygiene, MVC / MVVM / Clean Architecture layer boundaries, `scripts/` lifecycle automation, living documentation, self-code review |
+| `nodrift-ui` | Frontend & UI | Anti-slop guardrails, UX completeness (states), accessibility, responsive behavior |
+| `nodrift-troubleshooting` | When errors occur | Autonomous root-cause debugging, evidence-first investigation, reproduction, test failures, regression prevention |
 
-Install `nodrift-sync` always. Add the other two as needed.
+Install `nodrift-sync` always. Add the other four as needed.
 
 ## Install
 
@@ -94,7 +100,7 @@ npx nodrift-ai --yes --scope global --skills sync --agents claude
 | Flag | Meaning |
 | --- | --- |
 | `--yes`, `-y` | Skip the prompts |
-| `--skills <list>` | `nodrift-sync`, `nodrift-consultant`, `nodrift-standard`, or `all`. Default: `nodrift-sync` |
+| `--skills <list>` | `nodrift-sync`, `nodrift-consultant`, `nodrift-standard`, `nodrift-ui`, `nodrift-troubleshooting`, or `all`. Default: `nodrift-sync` |
 | `--scope <scope>` | `project` or `global`. Default: `project` |
 | `--agents <list>` | Agent ids. Default: detected agents, else `generic` |
 | `--update` | Refresh installed skills and the pointer block |
@@ -122,7 +128,7 @@ Then delete everything from `<!-- nodrift:start -->` through `<!-- nodrift:end -
 ## Repository layout
 
 ```text
-skills/                 The three skills (SKILL.md each)
+skills/                 The five skills (SKILL.md each)
 rules/nodrift.md        Entry rule for agents that read rules/
 nodrift.md              Single-file fallback pointer
 cli/index.mjs           Zero-dependency installer (npx nodrift-ai)
