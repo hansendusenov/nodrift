@@ -171,19 +171,32 @@ export function choose({ message, options, multi = false, input = process.stdin,
 export function upsertPointer(text) {
   const eol = text.includes('\r\n') ? '\r\n' : '\n'
   const block = POINTER_LINES.join(eol)
-  const start = text.indexOf(START)
-  const end = text.indexOf(END, start + 1)
+  const firstStart = text.indexOf(START)
+  const lastStart = text.lastIndexOf(START)
+  const firstEnd = text.indexOf(END)
+  const lastEnd = text.lastIndexOf(END)
 
-  if (start !== -1 && end !== -1) {
-    const next = text.slice(0, start) + block + text.slice(end + END.length)
+  // No markers at all: create or append
+  if (firstStart === -1 && firstEnd === -1) {
+    if (text.trim() === '') return { text: block + eol, status: 'created' }
+    const body = text.endsWith('\n') ? text : text + eol
+    return { text: `${body}${eol}${block}${eol}`, status: 'appended' }
+  }
+
+  // Exactly one well-ordered pair of markers: replace in-place
+  if (
+    firstStart !== -1 &&
+    firstEnd !== -1 &&
+    firstStart === lastStart &&
+    firstEnd === lastEnd &&
+    firstStart < firstEnd
+  ) {
+    const next = text.slice(0, firstStart) + block + text.slice(firstEnd + END.length)
     return { text: next, status: next === text ? 'unchanged' : 'updated' }
   }
-  if (start !== -1 || text.indexOf(END) !== -1) {
-    return { text, status: 'malformed' }
-  }
-  if (text.trim() === '') return { text: block + eol, status: 'created' }
-  const body = text.endsWith('\n') ? text : text + eol
-  return { text: `${body}${eol}${block}${eol}`, status: 'appended' }
+
+  // Any other configuration (single marker, duplicate markers, or END before START) is malformed
+  return { text, status: 'malformed' }
 }
 
 export function syncPointerFile(file) {
@@ -202,7 +215,7 @@ function hasPointer(file) {
 function reportPointer(file, status, base) {
   const rel = path.relative(base, file) || file
   if (status === 'malformed') {
-    console.log(`  ${yellow('!')} ${rel}: found one nodrift marker without its pair, left untouched. Fix the markers and rerun.`)
+    console.log(`  ${yellow('!')} ${rel}: found malformed or mismatched nodrift markers, left untouched. Fix the markers and rerun.`)
   } else {
     console.log(`  ${green('+')} ${rel}: pointer block ${status}`)
   }
@@ -229,8 +242,14 @@ function isInside(child, parent) {
 }
 
 export function installSkill(name, targetDir) {
+  if (!name || typeof name !== 'string' || path.basename(name) !== name) {
+    throw new Error(`Invalid skill name "${name}".`)
+  }
   const src = path.join(SKILLS_SRC, name)
   const dest = path.join(targetDir, name)
+  if (!isInside(src, SKILLS_SRC)) {
+    throw new Error(`Invalid skill path for "${name}".`)
+  }
   if (!fs.existsSync(path.join(src, 'SKILL.md'))) throw new Error(`Skill "${name}" is missing from the package (${src}).`)
   // The install replaces dest, so never let dest be, or sit inside, the package's own skills.
   if (same(src, dest) || isInside(dest, SKILLS_SRC)) return 'source'
@@ -275,12 +294,14 @@ function runInstall({ skills, scope, agentIds }, cwd, home) {
   }
 
   if (scope === 'project') {
-    console.log()
-    const files = ['AGENTS.md']
-    if (agentIds.includes('claude')) files.push('CLAUDE.md')
-    for (const f of files) {
-      const file = path.join(cwd, f)
-      reportPointer(file, syncPointerFile(file), cwd)
+    if (skills.length > 0 && plan.size > 0) {
+      console.log()
+      const files = ['AGENTS.md']
+      if (agentIds.includes('claude')) files.push('CLAUDE.md')
+      for (const f of files) {
+        const file = path.join(cwd, f)
+        reportPointer(file, syncPointerFile(file), cwd)
+      }
     }
   } else {
     console.log(`\n${dim('Global install: no AGENTS.md pointer is written. Add it per project with `npx nodrift-ai` (This project).')}`)
@@ -380,10 +401,16 @@ export function parseArgs(argv) {
     const eq = raw.indexOf('=')
     const flag = raw.startsWith('--') && eq !== -1 ? raw.slice(0, eq) : raw
     const value = () => {
-      if (raw.startsWith('--') && eq !== -1) return raw.slice(eq + 1)
-      const next = argv[++i]
-      if (next === undefined || next.startsWith('-')) throw new UsageError(`${flag} needs a value.`)
-      return next
+      let val
+      if (raw.startsWith('--') && eq !== -1) {
+        val = raw.slice(eq + 1)
+      } else {
+        val = argv[++i]
+      }
+      if (val === undefined || val.startsWith('-') || val.trim() === '') {
+        throw new UsageError(`${flag} needs a value.`)
+      }
+      return val
     }
     switch (flag) {
       case '--update': opts.update = true; break
@@ -405,6 +432,7 @@ function resolveSkills(list) {
   const all = SKILLS.map((s) => s.name)
   if (!list) return SKILLS.filter((s) => s.recommended).map((s) => s.name)
   const items = csv(list)
+  if (items.length === 0) throw new UsageError(`Select at least one skill. Choose from: ${all.join(', ')}, all.`)
   if (items.includes('all')) return all
   return items.map((item) => {
     const name = item.startsWith('nodrift-') ? item : `nodrift-${item}`
@@ -424,10 +452,12 @@ function resolveAgents(list, base) {
     const found = detect(base)
     return found.length ? found : ['generic']
   }
-  return csv(list).map((id) => {
+  const ids = csv(list).map((id) => {
     if (!AGENTS.some((a) => a.id === id)) throw new UsageError(`Unknown agent "${id}". Choose from: ${AGENTS.map((a) => a.id).join(', ')}.`)
     return id
   })
+  if (ids.length === 0) throw new UsageError(`Select at least one agent. Choose from: ${AGENTS.map((a) => a.id).join(', ')}.`)
+  return ids
 }
 
 // ---------- main ----------
@@ -481,7 +511,7 @@ async function main(argv) {
 
   if (opts.update) return runUpdate(cwd, home)
 
-  const scripted = opts.yes || opts.skills || opts.scope || opts.agents
+  const scripted = opts.yes || opts.skills !== null || opts.scope !== null || opts.agents !== null
   if (scripted) {
     const scope = resolveScope(opts.scope)
     const base = scope === 'global' ? home : cwd

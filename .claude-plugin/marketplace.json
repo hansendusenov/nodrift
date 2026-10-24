@@ -8,7 +8,7 @@
     {
       "name": "nodrift",
       "source": "./",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "description": "Stop context loss and architectural drift across AI coding agents."
     }
   ]

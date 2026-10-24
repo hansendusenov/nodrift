@@ -1,6 +1,6 @@
 {
   "name": "nodrift",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Stop context loss and architectural drift across AI coding agents.",
   "author": {
     "name": "Hansen Dusenov"
